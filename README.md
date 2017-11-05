@@ -48,4 +48,4 @@ include them in your favourite CI tool:
 ### Acknowledgments
 
 Thanks to Fabio Rapposelli for providing a great starting point for
-an [ESXi packer template](https://github.com/frapposelli/esxi-packer-templates).
+a [ESXi packer template](https://github.com/frapposelli/esxi-packer-templates).
