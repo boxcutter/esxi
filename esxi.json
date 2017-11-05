@@ -1,0 +1,73 @@
+{
+  "_comment": "Build with `packer build esxi.json`",
+  "builders": [
+    {
+      "boot_command": [
+        "<enter><wait>O<wait> ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "boot_wait": "5s",
+      "disk_size": "40960",
+      "disk_type_id": 0,
+      "guest_os_type": "vmkernel65",
+      "headless": false,
+      "http_directory": "http",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "name": "vmware-esxi",
+      "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
+      "shutdown_command": "esxcli system maintenanceMode set -e true -t 0 ; esxcli system shutdown poweroff -d 10 -r 'Packer Shutdown' ; esxcli system maintenanceMode set -e false -t 0",
+      "ssh_password": "vagrant",
+      "ssh_username": "root",
+      "ssh_wait_timeout": "60m",
+      "type": "vmware-iso",
+      "version": 11,
+      "vm_name": "{{ user `vm_name` }}",
+      "vmdk_name": "vmware-esxi-disk0",
+      "vmx_data": {
+        "ethernet0.virtualDev": "vmxnet3",
+        "memsize": "4096",
+        "numvcpus": "2",
+        "vhv.enable": "TRUE"
+      }
+    }
+  ],
+  "post-processors": [
+    {
+      "compression_level": 9,
+      "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "esxi-vagrantfile-template.rb"
+    }
+  ],
+  "provisioners": [
+    {
+      "destination": "/etc/ssh/keys-root/authorized_keys",
+      "source": "file/vagrant.pub",
+      "type": "file"
+    },
+    {
+      "scripts": [
+        "script/network.sh",
+        "script/dvfilter.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "destination": "/etc/rc.local.d/local.sh",
+      "source": "file/vnic-fix.sh",
+      "type": "file"
+    },
+    {
+      "script": "script/cleanup.sh",
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "iso_checksum": "bcbd495b7fdf33796b89bbbe9ef03fcd31f10a943cc30255353565131b7397a9",
+    "iso_checksum_type": "sha256",
+    "iso_url": "iso/VMware-VMvisor-Installer-201701001-4887370.x86_64.iso",
+    "version": "0.1.0",
+    "vm_name": "esx65"
+  }
+}
