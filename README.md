@@ -1,9 +1,9 @@
-# Packer templates in JSON for the VMware ESXi bare-metal hypervisor
+# Packer templates for the VMware ESXi bare-metal hypervisor written in legacy JSON
 
 ### Overview
 
 This repository contains [Packer](https://packer.io/) templates for creating
-VMware ESXi Vagrant boxes.
+VMware ESXi Vagrant boxes written in legacy JSON.
 
 ## Building the Vagrant boxes with Packer
 
