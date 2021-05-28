@@ -1,4 +1,4 @@
-# Packer templates for the VMware ESXi bare-metal hypervisor
+# Packer templates in JSON for the VMware ESXi bare-metal hypervisor
 
 ### Overview
 
